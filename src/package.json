@@ -1,0 +1,10 @@
+{
+	"scripts": {
+		"start": "node index.js"
+	},
+	"author": "PiasekDev (Maciej Piasecki)",
+	"type": "module",
+	"dependencies": {
+		"express": "*"
+	}
+}
