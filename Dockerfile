@@ -35,3 +35,5 @@ HEALTHCHECK --interval=10s --timeout=5s \
 	CMD curl -f http://localhost:80 || exit 1
 
 CMD ["start.sh"]
+
+LABEL org.opencontainers.image.source=https://github.com/PiasekDev/pawcho6
