@@ -1,12 +1,15 @@
-FROM scratch AS build
+# syntax=docker/dockerfile:1
 
-ADD ./alpine-minirootfs-3.19.1-x86_64.tar.gz /
+FROM alpine:3.19.1 AS build
 
-RUN apk add --no-cache npm
+RUN apk add --no-cache npm openssh-client git
 
-WORKDIR /app
+# download the public key for github.com (prevents the prompt to add the host to known_hosts)
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-COPY ./src .
+RUN --mount=type=ssh git clone git@github.com:PiasekDev/Maciej-Piasecki-PAwChO-Lab5.git /repository
+
+WORKDIR /repository/src
 
 RUN npm install
 
@@ -20,11 +23,11 @@ RUN apk add --no-cache npm curl
 
 WORKDIR /app
 
-COPY --from=build /app .
+COPY --from=build /repository/src .
 
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /repository/nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY ./start.sh /usr/local/bin/
+COPY --from=build /repository/start.sh /usr/local/bin/
 
 EXPOSE 80
 
